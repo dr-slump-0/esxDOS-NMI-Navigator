@@ -1,0 +1,164 @@
+7/4/20 13:17 - Los mensajes y llamadas en este chat ahora están protegidos con cifrado de extremo a extremo. Toca para más información.
+7/4/20 13:17 - Miguel Guerreiro: Olá.
+7/4/20 13:17 - Miguel Guerreiro: Miguel Guerreiro aqui
+7/4/20 13:18 - David Pesqueira Souto: Ola, qué tal?
+7/4/20 13:22 - David Pesqueira Souto: David Pesqueira aqui
+7/4/20 13:22 - Miguel Guerreiro: :)
+7/4/20 13:23 - Miguel Guerreiro: Já corrigi o bug do "$"
+7/4/20 13:25 - David Pesqueira Souto: Bem!
+7/4/20 13:27 - David Pesqueira Souto: Tengo otro bug relativo a la función F_SEEK cuando se llama desde la RAM en lugar desde el NMI handler.
+7/4/20 13:29 - David Pesqueira Souto: Da error $02, nonsense in esxDOS
+7/4/20 13:32 - David Pesqueira Souto: L=0 from start of file
+A=file handle
+BCDE=offset
+7/4/20 13:43 - Miguel Guerreiro: usando IXL?
+7/4/20 13:43 - Miguel Guerreiro: de RAM tem que ser IX em vez de HL
+7/4/20 13:43 - Miguel Guerreiro: o entry point RST $08 corrompe o HL
+7/4/20 13:47 - David Pesqueira Souto: Ok, estaba utilizando L. Obrigado!
+7/4/20 13:55 - Miguel Guerreiro: não consideraste em vez de gravar snapshot de tudo, usar o espaço de NMI, mais os 7K da pagina de comandos?
+7/4/20 13:55 - Miguel Guerreiro: ou seja, de dentro de NMI carregas um "comando", que pode ir até 7K
+7/4/20 13:56 - Miguel Guerreiro: assim ficas com cerca de 10k no total
+7/4/20 14:00 - David Pesqueira Souto: NMI y los dot command no comparten la misma zona de memoria? Hice en su momento alguna prueba pero tuve problemas
+7/4/20 14:00 - Miguel Guerreiro: no
+7/4/20 14:00 - Miguel Guerreiro: NMI = 3.4k na pagina 0
+7/4/20 14:00 - Miguel Guerreiro: commands tem uma pagina quase inteira
+7/4/20 14:02 - David Pesqueira Souto: Cual es el actual mapa de memoria (páginas utilizadas)? Es el mismo en los divMMC y los divIDE?
+7/4/20 14:05 - David Pesqueira Souto: Lo cierto es que dispongo de muy poca información y la mayoría la obtuve desensamblando y con un debugger
+7/4/20 14:05 - Miguel Guerreiro: en DivMMC tenho que ver, ja nao mexo nas v0.8.x, estou a trabalhar na 0.9.x que é diferente
+7/4/20 14:05 - Miguel Guerreiro: mas em DivIDE
+7/4/20 14:05 - Miguel Guerreiro: 0 - System + NMI
+7/4/20 14:05 - Miguel Guerreiro: 1 - FAT Driver
+7/4/20 14:06 - Miguel Guerreiro: 2 - Commands
+7/4/20 14:06 - Miguel Guerreiro: 3- TR-DOS
+7/4/20 14:11 - David Pesqueira Souto: 👍🏼
+7/4/20 14:12 - Miguel Guerreiro: o unico problema de usar a pagina de comandos para NMI
+7/4/20 14:12 - Miguel Guerreiro: é que depois ao chamar o snapload, corrompe o teu codigo
+7/4/20 14:13 - Miguel Guerreiro: mas é possível dar a volta a isso
+7/4/20 14:13 - Miguel Guerreiro: podes ter o codigo principal na area de NMI, e carregar o "overlay" como um comando, até 7.5K
+7/4/20 14:14 - David Pesqueira Souto: RST $30
+DB $0A
+Qué página utiliza?
+7/4/20 14:17 - David Pesqueira Souto: Por lo que me estás diciendo, creo que tengo que explicarte mejor lo que estoy probando ahora:
+7/4/20 14:19 - Miguel Guerreiro: DivIDE=3, DivMMC=4
+7/4/20 14:19 - Miguel Guerreiro: TR-DOS carrega-se automaticamente caso seja sobreescrito
+7/4/20 14:21 - David Pesqueira Souto: Desde NMI guardo cierta información en un fichero (podría ser una página de RAM no utilizada) y paso el control a un programa en RAM, que puede ser un SNA o un TAP, el navegador de ficheros
+7/4/20 14:24 - David Pesqueira Souto: Así tengo disponibles 48K en lugar de los 3,5K del NMI más los 7,5K de los dot commands
+7/4/20 14:29 - David Pesqueira Souto: De todas formas, en la version 0.0.16 de mi navegador NMI estaba utilizando solo los 3,5K, utilizando overlays sobre una parte de ese espacio. Si se pueden utilizar adicionalmente esos 7,5K de los dot command s, es una opción realmente interesante
+7/4/20 14:47 - David Pesqueira Souto: Tienes previsión de cuando tendrías una beta de la versión 0.9?
+7/4/20 14:49 - Miguel Guerreiro: sorry, estava a almoçar
+7/4/20 14:49 - Miguel Guerreiro: sim
+7/4/20 14:50 - David Pesqueira Souto: Qué hora es ahí? Aquí son las 14:49
+7/4/20 14:50 - Miguel Guerreiro: ainda será 1 ou 2 meses, agora vou lançar a 0.8.8 só com bugfixes e uma coisa ou outra nova
+7/4/20 14:50 - David Pesqueira Souto: Yo comeré dentro de un rato
+7/4/20 14:50 - Miguel Guerreiro: 13:50, aqui come-se cedo 😂
+7/4/20 14:51 - David Pesqueira Souto: 👍🏼🤣
+7/4/20 14:54 - Miguel Guerreiro: a versão 0.9 na verdade é uma versão "2.0", é muito diferente
+7/4/20 14:55 - David Pesqueira Souto: Tienes información sobre la nueva API? Cambia mucho?
+7/4/20 14:55 - Miguel Guerreiro: estou a por tudo num wiki, mas ainda não está pronto
+7/4/20 14:55 - Miguel Guerreiro: deixam de haver as drives
+7/4/20 14:56 - Miguel Guerreiro: o caminho é absoluto, por ex "hd0:/games", ou "sys:/config". tambem existem aliases, por exemplo "games:"
+7/4/20 14:57 - David Pesqueira Souto: Sobre la anterior solo tengo 3 ficheros: dos .inc y un .txt bastante incompleto, faltan todas las llamadas "especiales" a la API
+7/4/20 14:57 - Miguel Guerreiro: sim, o txt não é actualizado há anos :(
+7/4/20 14:57 - David Pesqueira Souto: Similar a linux/unix
+7/4/20 14:58 - Miguel Guerreiro: sim
+7/4/20 14:58 - Miguel Guerreiro: abrir devices tambem muda
+7/4/20 14:58 - Miguel Guerreiro: será com open como ficheiro, mas "devs:hda"
+7/4/20 14:58 - David Pesqueira Souto: Parece más coherente
+7/4/20 14:58 - Miguel Guerreiro: sim, a ideia era essa
+7/4/20 14:59 - David Pesqueira Souto: Estoy haciendo pruebas de copia de ficheros entre distintas unidades y actualmente es engorroso
+7/4/20 15:00 - David Pesqueira Souto: Incluso implementé un pequeño dot command para cambiar la unidad activa
+7/4/20 15:00 - Miguel Guerreiro: pois..
+7/4/20 15:02 - David Pesqueira Souto: Hora de comer, seguimos después
+7/4/20 15:07 - Miguel Guerreiro: 👍
+7/4/20 15:26 - David Pesqueira Souto: Estoy de vuelta
+7/4/20 15:29 - David Pesqueira Souto: Tienes información adicional de las llamadas no documentadad en la version 0.8.x? Me refiero a cosas como reset, mount/umount vdisks, llamadas relativas  a TR-DOS...
+7/4/20 15:37 - Miguel Guerreiro: sim
+7/4/20 15:38 - David Pesqueira Souto: Puedes enviarmelas por email?
+7/4/20 15:40 - Miguel Guerreiro: infelizmente não tenho de cabeça o que está documentado e não está, mas a syscall do autoload, dos version e dos vdisks posso fazer um email com isso
+7/4/20 15:40 - David Pesqueira Souto: Cual es la forma correcta para cambiar la página activa desde NMI y RAM estandard y poder utilizar los 7.5k que me indicas?
+7/4/20 15:41 - David Pesqueira Souto: Yo tengo lo que saqué desensamblando, es más que nada para comparar
+7/4/20 15:42 - David Pesqueira Souto: Si te es complicado, déjalo, realmente no lme es indispensable
+7/4/20 15:52 - Miguel Guerreiro: vou ver
+7/4/20 15:53 - David Pesqueira Souto: Gracias!
+7/4/20 16:55 - David Pesqueira Souto: Algo que sería interesante documentar son los registros modificados por cada llamada al API
+7/4/20 16:56 - Miguel Guerreiro: sim, na 0.9.x já estou a fazer isso... na 0.8.x não vou perder muito mais tempo, só bugfixes
+7/4/20 16:57 - David Pesqueira Souto: No, en la 0.8.x no vale la pena
+8/4/20 13:08 - David Pesqueira Souto: Buenos días Miguel. Una duda: en errors.inc tienes documentado hasta el error 28, MAPRAM is ACTIVE. Yo tengo detectados al menos 3 errores más, Drive is BUSY, Unknown FILESYSTEM, Device is BUSY. Los numeros de estos errores son 29, 30 y 31? Hay más codigos de error? Gracias y un saludo
+8/4/20 13:16 - Miguel Guerreiro: ‎error_msgs.inc (archivo adjunto)
+error_msgs.inc
+8/4/20 15:53 - Miguel Guerreiro: sorry, estou a trabalhar
+8/4/20 15:53 - Miguel Guerreiro: era isso que querias?
+8/4/20 17:33 - David Pesqueira Souto: Si, gracias. Yo tambien estoy con teletrabajo
+10/4/20 19:33 - David Pesqueira Souto: Una pregunta Miguel: qué assembler utilizas? Utilizas algún IDE?
+10/4/20 19:38 - Miguel Guerreiro: eu uso Sublime Text + sjasmplus
+10/4/20 19:39 - David Pesqueira Souto: Ok, gracias
+10/4/20 19:52 - Miguel Guerreiro: e tu?
+10/4/20 20:27 - David Pesqueira Souto: Pasmo y sjasmplus, con notepad++, y zdevstudio
+10/4/20 20:49 - Miguel Guerreiro: ok
+
+23/5/20 18:27 - Miguel Guerreiro: hola david
+23/5/20 19:40 - davidpesqueirasouto: Hola Miguel, estoy de paseo con el peque, después hablamos
+23/5/20 19:41 - Miguel Guerreiro: vale
+23/5/20 21:06 - davidpesqueirasouto: Hola Miguel, dime
+23/5/20 21:08 - Miguel Guerreiro: vou lançar o esxdos 0.8.8 amanhã, tens algum bug para corrigir?
+23/5/20 21:09 - davidpesqueirasouto: Excepto lo de la otra vez, nada
+23/5/20 21:09 - Miguel Guerreiro: [06/04/2020] Kernel: Fixed bug in M_GETSETDRV related with SYS ("$") drive (lordcoxis + reported by Dr. Slump)
+23/5/20 21:09 - Miguel Guerreiro: este?
+23/5/20 21:09 - davidpesqueirasouto: Ese
+23/5/20 21:09 - Miguel Guerreiro: 👍
+23/5/20 21:10 - davidpesqueirasouto: OK, estaré a la espera
+25/5/20 17:55 - Miguel Guerreiro: http://www.esxdos.org/files/esxdos088.zip
+25/5/20 18:04 - davidpesqueirasouto: OK, muchas gracias. En cuanto pueda lo pruebo
+25/5/20 18:04 - Miguel Guerreiro: 👍
+27/5/20 12:29 - davidpesqueirasouto: Hola Miguel, ya publiqué mi navegador con soporte para la versión 0.8.8, en principio parece que todo funciona correctamente.
+27/5/20 12:32 - davidpesqueirasouto: Mira, estuve pensando en lo que me dijiste para utilizar las páginas de memoria libres del divide. Tienes implementada alguna función interna para cargar determinada página con el contenido de un fichero, similar a RST $30 : DB $0A ?
+27/5/20 12:33 - davidpesqueirasouto: Porque sino tendría que implementar algún sistema para hacerlo fuera de la zona $2000-$3FFF
+5/6/20 16:38 - davidpesqueirasouto: Hola Miguel, qué tal todo? Espero que bien. Una pregunta, es posible llamar a una dirección de la ROM original del spectrum desde la rutina NMI o desde un dot command? Gracias.
+5/6/20 18:22 - Miguel Guerreiro: Sim
+5/6/20 18:31 - Miguel Guerreiro: Já digo
+5/6/20 19:04 - Miguel Guerreiro: RST $18 - CALL 48K ROM ROUTINE
+5/6/20 19:04 - Miguel Guerreiro: rst $18; defw ADDR
+5/6/20 19:15 - davidpesqueirasouto: Ok, gracias!
+5/6/20 19:16 - Miguel Guerreiro: 👍
+5/6/20 19:42 - Miguel Guerreiro: acho que nao tenho espaço na v0.8.x
+5/6/20 19:53 - davidpesqueirasouto: Ok, ya pensaré algo. Obrigado!
+5/6/20 19:54 - Miguel Guerreiro: deixa-me pensar se ha alguma maneira
+5/6/20 19:55 - davidpesqueirasouto: 👍🏼
+5/6/20 19:57 - Miguel Guerreiro: pode ser so compativel com 0.8.8 ?
+5/6/20 20:27 - davidpesqueirasouto: Sería una restricción importante. Creo que no valdría la pena. No te preocupes, ya pensaré algo.
+5/6/20 20:34 - Miguel Guerreiro: de qualquer forma te deixo isto
+5/6/20 20:34 - Miguel Guerreiro: init_page5:
+	ld	hl,$0de2		; return to page 0
+	push	hl
+	ld	hl,$0721		; ld (hl),a; or a; ret
+	push	hl
+	ld	hl,$05e5		; out (SRAM),a
+	push	hl		
+	ld	a,5			; pagina 5
+	ld	hl,$3df9		; RAM_PAGE
+	ret
+
+load_exec_page5:
+	; first open file to load, seek if needed
+	ld	b,FILE_HANDLE
+	call	load
+	ld	hl,$0de2		; return to page 0
+	push	hl
+	ld	hl,$2000		; exec address
+	push	hl
+	ld	a,5			; pagina 5
+	ld	hl,$05e5		; out (SRAM),a
+	push	hl
+	ret
+	
+load:
+	ld	hl,$0dd1		; load to $2000 (max size 7K), and close file
+	push	hl
+	ret
+5/6/20 20:34 - Miguel Guerreiro: é para 0.8.8, para outras talvez alguns endereços mudem
+5/6/20 20:36 - Miguel Guerreiro: tanto para pagina 5, como 6, como 7, etc...
+5/6/20 20:36 - Miguel Guerreiro: em divMMC, claro
+5/6/20 20:39 - Miguel Guerreiro: a versão 0.9.x ja inicializa todas as paginas
+5/6/20 20:49 - davidpesqueirasouto: Ok, en cuanto pueda hago alguna prueba
+5/6/20 20:49 - davidpesqueirasouto: Gracias!
+5/6/20 20:50 - Miguel Guerreiro: nada por isso :)

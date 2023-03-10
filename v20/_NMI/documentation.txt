@@ -1,0 +1,282 @@
+;==============================================================================
+; DOCUMENTATION
+;==============================================================================
+
+/* ----------------------------------------------------------------------------
+	----------------
+	dir entry buffer
+	----------------
+
+	<byte>    attributes (like MSDOS)
+	<asciiz>  file/dirname
+	<DWord>   date
+	<DWord>   filesize
+
+	date and filesize are relatives to the end of file/dirname asciiz string
+
+---------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------
+	----------
+	NMI_BUFFER
+	----------
+
+	Offset   Size   Description
+	------------------------------------------------------------------------
+	0        1      byte   I                              <- 48k SNA, 27 bytes
+	1        8      word   HL',DE',BC',AF'
+	9        10     word   HL,DE,BC,IY,IX
+	19       1      byte   Interrupt (bit 2 contains IFF2, 1=EI/0=DI)
+	20       1      byte   R
+	21       4      words  AF,SP
+	25       1      byte   IntMode (0=IM0/1=IM1/2=IM2)
+	26       1      byte   BorderColor (0..7)
+
+	v0.8.0, v0.8.5
+
+	27       2      word   PC (Program Counter)           <- 128k SNA, 4 bytes
+	29       1      byte   RAM bank paged in @ $c000
+	30       1      byte   RAM Size (0=16k,1=48k,2=128k)  <- CONFLICT !!!
+	30       1      byte   TR-DOS (SNA file format)
+
+	v0.8.6, v0.8.7, v0.8.8
+
+	27       1      byte   RAM Size (0=16k,1=48k,2=128k)
+	28       2      word   PC (Program Counter)           <- 128k SNA, 4 bytes
+	30       1      byte   RAM bank paged in @ $c000
+	31       1      byte   TR-DOS (SNA file format)
+
+---------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------
+
+	esxDOS  call   return
+	version method address       SP
+	------- ------ -----------   ----
+	v0.8.0  BASIC  4042   0FCA
+		NMI    4069   0FE5
+	v0.8.5  BASIC  3495   0DA7
+		NMI    3522   0DC2
+	v0.8.6  BASIC  3503   0DAF
+		NMI    3530   0DCA
+	v0.8.6  BASIC  3477   0D95
+	b5.1    NMI    3504   0DB0
+	v0.8.7  BASIC
+		NMI
+	v0.8.8  BASIC  3492   0DA4   FF4C
+		NMI    3519   0DBF   3DD6
+
+	v0.8.9	BASIC
+		NMI                  3DE6
+
+	RST $10 funciona con SP por encima de $3FFF (dot command .PRUEBA)
+
+---------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------
+
+	checking ESXDOS version
+
+	there are a syscall to check ESXDOS version
+	tests with M_DOSVERSION API call returns inconclusive results
+
+	v0.8.5-DivIDE   $b8 (184)
+	v0.8.5-DivMMC   $b8 (184)
+	v0.8.6-DivIDE   $a8 (168)
+	v0.8.6-DivMMC   $a8 (168)
+	v0.8.7-DivIDE   $a7 (167)
+	v0.8.7-DivMMC   $a7 (167)
+	v0.8.8-DivIDE   $a8 (168)
+	v0.8.8-DivMMC   $a8 (168)
+	v0.8.9-DivIDE   $a8 (168)
+	v0.8.9-DivMMC   $a8 (168)
+
+---------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------
+
+	method I: drives M_DRIVEINFO
+
+	Note: not documented by esxDOS developers
+	Aditional info supplied  by Miguel Guerreiro (lordcoxis)
+
+	0   1  byte   Drive unit (40h, 41h... @, A... hd1, hd2...)
+	1   1  byte   Device
+	2   1  byte   Flags
+	3   1  dword  Drive size in 512 bytes blocks (little-endian)
+	7   -  asciiz File System Type
+	-   -  asciiz Volume Label
+
+
+	method III: devices DISK_INFO
+
+	0   1  byte   Device Path (40, 48... hda, hdb...)
+	1   1  byte   Device Flags (to be documented, block size, etc)
+	2   1  dword  Device size in blocks (little-endian ???)
+	6
+
+---------------------------------------------------------------------------- */
+
+
+/* ----------------------------------------------------------------------------
+
+	The additional memory features of the 128K/+2 are controlled by
+	port 0x7ffd
+
+	Bits 0-2: RAM page (0-7) to map into memory at 0xc000.
+	Bit 3:    Select normal (0) or shadow (1) screen to be displayed. The
+	          normal screen is in bank 5, while the shadow screen is in
+	          bank 7. Note that this does not affect the memory between
+	          0x4000 and 0x7fff, which is always bank 5.
+	Bit 4:    ROM select. ROM 0 is the 128k editor and menu system; ROM 1
+	          contains 48K BASIC.
+	Bit 5:    If set, memory paging will be disabled and further output to
+	          this port will be ignored until the computer is reset.
+
+	Like -l option of SNAPload dot command
+
+---------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------
+
+	DivMMC:
+
+	Version	$05e5	$0721	$0dd1	$0de2	RAM_PAGE
+	-------	-----	-----	-----	-----	--------
+	0.8.5	$05d3	$0711	$0dd4	$0de5	$3df9
+	0.8.6	$05e5	$0721	$0dc2	$0dd3	$3df9
+	0.8.7	$05e5	$0721	$0dca	$0ddb	$3df9
+	0.8.8	$05e5	$0721	$0dd1	$0de2	$3df9
+	0.8.9	$05e5	$0721	$0dd9	$0dea	$3df9
+
+	DivIDE:
+
+	Version	$05e5	$0721	$0dd1	$0de2	RAM_PAGE
+	-------	-----	-----	-----	-----	--------
+	0.8.5	$05d3	$0711	$0dd4	$0de5	$3df9
+	0.8.6	$05e5	$0721	$0dc2	$0dd3	$3df9
+	0.8.7	$05e5	$0721	$0dca	$0ddb	$3df9
+	0.8.8	$05e5	$0721	$0dd1	$0de2	$3df9
+	0.8.9	$05e5	$0721	$0dd9	$0dea	$3df9
+
+	RAM_PAGE	Description
+	--------	------------
+	0		System + NMI
+	1		FAT Driver
+	2		Commands
+	3		TR-DOS+
+	4		RST $30 : DB $0A
+	5 - 63		Available
+
+	$2000-$3fff	Address where pages are mapped
+
+	Printer buffer (48k).
+	$5bff-$5b00	256 bytes
+	Temporary stack (128k).
+	$5bff-$5b8c	Espacio libre para la pila (SP=$5c00), 116 bytes
+	$5bff-$5b7c	Espacio libre para la pila (si necesario), 132 bytes
+
+
+	Code dissasembly:
+	-----------------------------------------------------------------------
+
+$05e5	out ($e3), a	; d3 e3
+	ret		; c9
+
+$0721	ld (hl), a	; 77
+	or a		; b7
+	ret		; c9
+
+$0dd9	ld a, b		; 78
+	push bc		; c5
+	ld hl, $2000	; 21 00 20
+	ld bc, $1c00	; 01 00 1c
+	rst $08		; cf
+	db $9d		; 9d		; F_READ
+	pop bc		; c1
+	push af		; f5
+	ld a, b		; 78
+	rst $08		; cf
+	db $9b		; 9b		; F_CLOSE
+	pop af		; f1
+	ld b, a		; 47
+$0dea	ld a, 0		; 3e 00
+	out ($e3), a	; d3 e3		; return to page 0
+	ld a, b		; 78
+	ret		; c9
+
+
+	Code examples by Miguel Guerreiro:
+	-----------------------------------------------------------------------
+
+init_page5:
+	ld	hl,$0dea		; return to page 0
+	push	hl
+	ld	hl,$0721		; ld (hl),a; or a; ret
+	push	hl
+	ld	hl,$05e5		; out (SRAM),a
+	push	hl
+	ld	a,5			; pagina 5
+	ld	hl,$3df9		; RAM_PAGE
+	ret
+
+load_exec_page5:
+	; first open file to load, seek if needed
+	ld	b,FILE_HANDLE
+	call	load
+	ld	hl,$0dea		; return to page 0
+	push	hl
+	ld	hl,$2000		; exec address
+	push	hl
+	ld	a,5			; pagina 5
+	ld	hl,$05e5		; out (SRAM),a
+	push	hl
+	ret
+
+load:
+	ld	hl,$0dd9		; load to $2000 (max size 7K), and close file
+	push	hl
+	ret
+
+---------------------------------------------------------------------------- */
+
+/* ----------------------------------------------------------------------------
+	Physical disks:
+
+	BASIC commands
+	On all BASIC commands that use a drive parameter, you can use * for the current drive.
+	[...] means its an optional parameters.
+	GOTO [drive] ["path"]
+		Example:
+		GOTO hd0"demos"
+		This will change the current drive and directory to hd0:/demos.
+		You can use it to change the current drive, dir, or both.
+	CAT [drive]
+		Example:
+		CAT, CAT *, CAT hd1
+		Without specifying a drive a fast CAT is done (no speccy header info is displayed).
+	LOAD drive "path/filename" [CODE]|[SCREEN$]
+	MERGE drive "path/filename"
+		Example:
+		LOAD *"/test/blabla", etc
+	SAVE drive "path/filename" [LINE]|[CODE]|[SCREEN$]
+		Example:
+		SAVE *"filename" SCREEN$, etc
+	ERASE [drive] "path/filename"
+		Example:
+		ERASE "filename", ERASE *"filename", etc
+
+	Virtual disks:
+
+	.vdisk unit <filename>
+		montar un archivo .TRD como unidad de disco virtual para el emulador de TR-DOS
+
+	RANDOMIZE USR 15616
+		entrar en el emulador de TR-DOS (T, Extended Mode+L)
+		CAT "A:" (Extended Mode+ss+9)
+		CAT "B:"
+		CAT "C:"
+		CAT "D:"
+---------------------------------------------------------------------------- */
+
+
