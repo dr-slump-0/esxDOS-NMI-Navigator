@@ -8,7 +8,7 @@ Folder      | Contents
 :---------- | :----------------------
 **v20**     | v20 version source code
 **Images**  | Auxiliary tools and disk images for various emulators  
-**Paquete** | Source original esxDOS package and destination of built specific NMI Navigator package 
+**Paquete** | Original esxDOS package and destination of built packages containing NMI Navigator 
 
 Batch file            | Use
 :-------------------- | :---------------------------------------------
