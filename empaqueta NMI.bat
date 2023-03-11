@@ -102,11 +102,11 @@ COPY /Y "%SRC%\_support\README.txt" "%DST%\%PKG3%\" > NUL
 if errorlevel 1 goto ERROR
 echo copied README.txt
 
-"C:\Program Files\7-Zip\7z.exe" a -r -y "%DST%\%PKG1%.zip" "%DST%\%PKG1%\*" > NUL
+"%ProgramW6432%\7-Zip\7z.exe" a -r -y "%DST%\%PKG1%.zip" "%DST%\%PKG1%\*" > NUL
 echo created %DST%\%PKG1%.zip
-"C:\Program Files\7-Zip\7z.exe" a -r -y "%DST%\%PKG2%.zip" "%DST%\%PKG2%\*" > NUL
+"%ProgramW6432%\7-Zip\7z.exe" a -r -y "%DST%\%PKG2%.zip" "%DST%\%PKG2%\*" > NUL
 echo created %DST%\%PKG2%.zip
-"C:\Program Files\7-Zip\7z.exe" a -r -y "%DST%\%PKG3%.zip" "%DST%\%PKG3%\*" > NUL
+"%ProgramW6432%\7-Zip\7z.exe" a -r -y "%DST%\%PKG3%.zip" "%DST%\%PKG3%\*" > NUL
 echo created %DST%\%PKG3%.zip
 
 PAUSE
