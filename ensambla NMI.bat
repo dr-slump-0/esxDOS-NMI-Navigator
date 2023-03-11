@@ -1,16 +1,16 @@
 @ECHO OFF
 
 SET VERSION=20
-SET RUTA=C:\Users\david\Desktop\v%VERSION%
-SET DISKS=C:\Users\david\Desktop\Images
+SET RUTA=%USERPROFILE%\Desktop\v%VERSION%
+SET DISKS=%USERPROFILE%\Desktop\Images
 SET DRIVE=F:
 
-SET OSFMOUNT="C:\Program Files\OSFMount\OSFMount.com"
-SET RAW2HDF="C:\Users\david\Desktop\Images\raw2hdf"
-SET PSEXEC="C:\Users\david\Desktop\Images\psexec64"
-SET SYNC64="C:\Users\david\Desktop\Images\sync64"
-SET PASMO="C:\Users\david\Desktop\Images\pasmo54b2.exe"
-SET SJASMPLUS="C:\Users\david\Desktop\Images\sjasmplus.exe"
+SET OSFMOUNT="%ProgramW6432%\OSFMount\OSFMount.com"
+SET RAW2HDF="%USERPROFILE%\Desktop\Images\raw2hdf"
+SET PSEXEC="%USERPROFILE%\Desktop\Images\psexec64"
+SET SYNC64="%USERPROFILE%\Desktop\Images\sync64"
+SET PASMO="%USERPROFILE%\Desktop\Images\pasmo54b2.exe"
+SET SJASMPLUS="%USERPROFILE%\Desktop\Images\sjasmplus.exe"
 
 openfiles > NUL 2> NUL
 if %ERRORLEVEL% equ 1 (

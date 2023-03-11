@@ -1,7 +1,7 @@
 @ECHO OFF
 SET VERSION=20
-SET SRC=C:\Users\david\Desktop\v%VERSION%
-SET DST=C:\Users\david\Desktop\Paquete
+SET SRC=%USERPROFILE%\Desktop\v%VERSION%
+SET DST=%USERPROFILE%\Desktop\Paquete
 SET PKG1=nmi_v0.0.%VERSION%
 SET PKG2=custom_v0.0.%VERSION%
 SET PKG3=esxdos089
