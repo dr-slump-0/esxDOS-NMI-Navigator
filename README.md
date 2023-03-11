@@ -8,12 +8,12 @@ Folder      | Contents
 :---------- | :----------------------
 **v20**     | v20 version source code
 **Images**  | Auxiliary tools and disk images for various emulators  
-**Paquete** | Original esxDOS package and destination of built packages containing NMI Navigator 
+**Paquete** | Original esxDOS package and destination of built package containing NMI Navigator 
 
 Batch file            | Use
 :-------------------- | :---------------------------------------------
 **buildhdf.bat**      | Windows batch file for sync/create disk images  
-**empaqueta NMI.bat** | Windows batch file for create NMI Navigator especific packages  
+**empaqueta NMI.bat** | Windows batch file for built esxDOS package containing NMI Navigator  
 **ensambla NMI.bat**  | Windows batch file for assemble NMI Navigator and update disk images  
 **montar.bat**        | Windows batch file for mount disk images  
 
