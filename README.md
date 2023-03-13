@@ -4,7 +4,7 @@ This is v20 version of my esxDOS NMI Navigator.
 
 Main file is v20/_NMI/NMI.asm
 
-To assemble:  
+<ins>To assemble:</ins>
 sjasmplus --nologo --syntax=bFi --dirbol --sym=v20\\_nmi\\nmi.sym  --raw=v20\\_nmi\\nmi.sys v20\\_nmi\\nmi.asm
 
 This GitHub repository is under construction.
