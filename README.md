@@ -14,6 +14,7 @@ This GitHub repository is under construction.
 **v18**           | v18 version source code
 **v19**           | v19 version source code
 **v20**           | v20 version source code (alpha)
+**dotcommands**   | All dotcommands published with my NMI Navigator and more
 **Images**        | Auxiliary tools and disk images for various emulators  
 **Paquete**       | Original esxDOS package and destination of built package containing NMI Navigator 
 
