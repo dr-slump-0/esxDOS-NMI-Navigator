@@ -1,0 +1,61 @@
+;==============================================================================
+; Project: delete.zdsp
+; Main File: delete.asm
+; Date: 18/09/2017 9:55:43
+;
+; Created with zDevStudio - Z80 Development Studio.
+;
+; pasmo --err --bin delete.asm delete
+;
+;==============================================================================
+
+        include ..\nmi.inc
+        include ..\api.inc
+        include ..\esxdos.inc
+        include ..\errors.inc
+        include ..\nmi.publics
+
+        org     ovrBuf
+
+; -----------
+; delete file
+; -----------
+;
+delFile ld      a, (bDAttr)
+        and     A_DIR           ; check if is dir
+        jr      z, isFile
+
+isDir   ld      a, 5            ; reprint nothing
+        ret
+
+isFile  ld      bc, 1*256+23    ; 1 line from line 23
+        ld      a, COL_BOT      ; color
+        call    clrScr
+        ld      hl, msgOk
+        call    prStr
+        ;
+        ; confirm delete
+        ;
+        call    waitKey
+        cp      'Y'
+        ld      a, 4            ; reprint bottom and cursor
+        ret     nz
+        ;
+        ld      hl, bDName      ; asciiz string containg path and/or filename
+        call    fUnlink
+
+        ld      a, 1            ; reload dir and reprint all
+        ret
+
+; --------
+; messages
+; --------
+;
+msgOk   db      $16,23,1, 'DELETE (Y/N)? ',0
+
+;------------------------------------------------------------------------------
+IF $ > ovrBuf+SIZ_OVR
+        .ERROR Resulting code too long
+ENDIF
+;------------------------------------------------------------------------------
+
