@@ -1,0 +1,61 @@
+[Project]
+Name=drives.zdsp
+Path=C:\Users\david\Desktop\v20\.DRIVES\
+
+[File]
+Total=2
+0=drives.asm
+1=esxdos.inc
+
+[Directory]
+Total=1
+0=C:\Users\david\Desktop\v20\.DRIVES\
+
+[Options]
+Total=26
+0=OBJFORMAT:0
+1=COMMONSEG:0
+2=AUTOLOCAL:0
+3=BRACKET:0
+4=DEBUG1:1
+5=DEBUG2:0
+6=CASEINS:0
+7=PUBSYMBOLS:0
+8=USERCOMMAND:
+9=OBJEXT:
+10=OBJFORMAT1:1
+11=_DIRBOL:0
+12=_SYNTAX_a:0
+13=_SYNTAX_b:1
+14=_SYNTAX_B:0
+15=_SYNTAX_f:0
+16=_SYNTAX_F:1
+17=_SYNTAX_i:1
+18=_SYNTAX_l:0
+19=_SYNTAX_L:0
+20=_SYNTAX_m:0
+21=_SYNTAX_M:0
+22=_SYNTAX_w:0
+23=USERCOMMAND1:
+24=OBJEXT1:
+25=TOTALSYMBOL:0
+
+[External]
+Total=0
+
+[FileInUse]
+Total=1
+0=C:\Users\david\Desktop\v20\.DRIVES\drives.asm
+
+[Bookmarks]
+Total=10
+Bookmark0=(1, 0)
+Bookmark1=(1, 0)
+Bookmark2=(1, 0)
+Bookmark3=(1, 0)
+Bookmark4=(1, 0)
+Bookmark5=(1, 0)
+Bookmark6=(1, 0)
+Bookmark7=(1, 0)
+Bookmark8=(1, 0)
+Bookmark9=(1, 0)
