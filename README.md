@@ -11,7 +11,9 @@ This GitHub repository is under construction.
 
 <ins>Folder</ins> | <ins>Contents</ins> 
 :-                | :-
-**v20**           | v20 version source code
+**v18**           | v18 version source code
+**v19**           | v19 version source code
+**v20**           | v20 version source code (alpha)
 **Images**        | Auxiliary tools and disk images for various emulators  
 **Paquete**       | Original esxDOS package and destination of built package containing NMI Navigator 
 
