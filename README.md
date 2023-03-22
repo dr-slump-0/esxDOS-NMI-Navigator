@@ -12,7 +12,7 @@ This GitHub repository is under construction.
 <ins>Folder</ins> | <ins>Contents</ins> 
 :-                | :-
 **v18**           | v18 version source code
-**v19**           | v19 version source code
+**v19**           | v19 version source code (new beta)
 **v20**           | v20 version source code (alpha)
 **dotcommands**   | All dotcommands published with my NMI Navigator and more
 **Images**        | Auxiliary tools and disk images for various emulators  
